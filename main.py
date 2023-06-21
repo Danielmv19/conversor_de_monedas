@@ -2,7 +2,9 @@ import requests
 import pprint as pp
 import tkinter
 import customtkinter
-
+from CTkScrollableDropdown import *
+from CTkToolTip import *
+import pywindowstyles
 key = "3cc9dd95de8b65629009f07dcd9752c99ce01ca1"
 parameters = {"api_key": key, "format": "json"}
 # monedaInicial = input('De: ')
@@ -188,7 +190,7 @@ customtkinter.set_default_color_theme("dark-blue") # Themes: blue (default), dar
 app = customtkinter.CTk()  
 app.geometry("500x260")
 app.title('Conversor')
-app.iconbitmap('tipo-de-cambio.ico')
+#app.iconbitmap('tipo-de-cambio.ico')
 app.resizable(0,0)
 # FRAME-----------------------------------------------
 frame1 = customtkinter.CTkFrame(master=app, width=200, height=500,fg_color='#1f1f1f')
@@ -213,43 +215,62 @@ entry = customtkinter.CTkEntry(master=app,
                                border_width=2,
                                corner_radius=5)
 entry.place(relx=0.2, rely=0.5, anchor=tkinter.CENTER)
+CTkToolTip(entry, message="Monto")
+
+
 # COMBOBOX -----------------------------
 def combobox_callback1(choice):
     global mon1
     mon1 = choice
     print(choice)
-combobox1 = customtkinter.CTkComboBox(app, values=listaMonedas,
-                                     command=combobox_callback1)
-#combobox1.pack(padx=20, pady=10)
+
+
+combobox1 = customtkinter.CTkComboBox(app) # '''values=listaMonedas'''
 combobox1.place(relx=0.2, rely=0.1, anchor=tkinter.CENTER)
 combobox1.set("USD")
+
+CTkScrollableDropdown(combobox1, values=listaMonedas, command=combobox_callback1, button_color="transparent")
+#CTkToolTip(combobox1, message="Moneda Inicial")
+
 #--------------------------------------------
 def combobox_callback2(choice):
     global mon2
     mon2 = choice
     print(choice)
-combobox2 = customtkinter.CTkComboBox(app, values=listaMonedas,
-                                     command=combobox_callback2)
+combobox2 = customtkinter.CTkComboBox(app)
 combobox2.place(relx=0.2, rely=0.25, anchor=tkinter.CENTER)
 combobox2.set("JPY")
+CTkScrollableDropdown(combobox2, values=listaMonedas, command=combobox_callback2,  button_color="transparent")
+#CTkToolTip(combobox2, message="Moneda Final")
+
+
 def ff():
     url = f'https://api.getgeoapi.com/v2/currency/convert?api_key={key}&from={mon1}&to={mon2}&amount={entry.get()}&format=json'
     response = requests.get(url, parameters)
     r = response.json()
     textbox1 = customtkinter.CTkTextbox(master=app, width=200, height=150, corner_radius=4)
     textbox1.place(relx=0.5, rely=0.2)
-    textoFinal = f'cantidad: {r["amount"]}\nbase_code: {r["base_currency_code"]}\nbase_name: {r["base_currency_name"]}\nupdate: {r["updated_date"]} '
+    rte = r['rates']
+    mon = rte[f'{mon2}']
+    currency_name = mon['currency_name']
+    rate = mon['rate']
+    rate_for_amount = mon['rate_for_amount']
+    textoFinal = f'Amount: {r["amount"]}\nBase Code: {r["base_currency_code"]}\nBase Name: {r["base_currency_name"]}\nUpdate: {r["updated_date"]}\nBase Code: {mon2}\nCurrency Name: {currency_name}\nRate: {rate}\nRate For Amount: {rate_for_amount}'
     textbox1.insert("0.0", textoFinal)
+
+
 # BOTONES---------------------------------------------
 button = customtkinter.CTkButton(master=app, text="Convertir", command=ff)
 button.place(relx=0.2, rely=0.7, anchor=tkinter.CENTER)
+CTkToolTip(button, message="Ejecutar Conversion")
 
 #--------------------------------------------------------
 
 # TEXTBOX---------------------------------------------
-# textbox1 = customtkinter.CTkTextbox(master=app, width=200,height=150, corner_radius=4)
-# textbox1.place(relx=0.5, rely=0.2)
+# textbox1 = customtkinter.CTkTextbox(master=app, width=200,height=150, corner_radius=4)# textbox1.place(relx=0.5, rely=0.2)
 # textbox1.insert("0.0", f'cantidad: ')
 
+pywindowstyles.apply_style(app, 'acrylic')
+pywindowstyles.change_header_color(app, red=10, blue=50, green=50) # rgb order is manual
 #--------------------------------------------------
 app.mainloop()
