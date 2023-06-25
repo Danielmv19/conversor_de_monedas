@@ -5,14 +5,13 @@ import customtkinter
 from CTkScrollableDropdown import *
 from CTkToolTip import *
 import pywindowstyles
-key = "3cc9dd95de8b65629009f07dcd9752c99ce01ca1"
+from dotenv import load_dotenv
+import os
+load_dotenv()
+
+key = os.getenv('API_KEY')
 parameters = {"api_key": key, "format": "json"}
-# monedaInicial = input('De: ')
-# monedaFinal = input('A: ')
-# monto = int(input('Monto: '))
-# url = f'https://api.getgeoapi.com/v2/currency/convert?api_key={key}&from={mon1}&to={a}&amount={importe}&format=json'
-# response = requests.get(url, parameters)
-#pp.pprint(response.json())
+
 mon1 = None
 mon2 = None
 
