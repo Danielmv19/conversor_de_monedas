@@ -195,8 +195,6 @@ app.resizable(0,0)
 frame1 = customtkinter.CTkFrame(master=app, width=200, height=500,fg_color='#1f1f1f')
 frame1.grid(row=0, column=0, padx=0, pady=0)
 # FUNCIONES----------------------------------------------------------
-def button_function():
-    print("button pressed")
 # LABEL-----------------------------------------------
 text_var = tkinter.StringVar(value="Importe")
 label = customtkinter.CTkLabel(master=frame1,
